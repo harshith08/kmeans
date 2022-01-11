@@ -1,4 +1,4 @@
-# kmeans
+# KMeans clustering Algorithm
 
 * This code contains the kmeans clustering algorithm from scratch and also the dunns index code from scratch
 * The dataset is taken form kaggle and i ahve provided the link to the dataset
