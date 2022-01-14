@@ -147,72 +147,75 @@ class kMeans:
         plt.savefig(name2)
         plt.clf()
 
-'''
-This is the main method
-'''
-if __name__ == "__main__":
-    
-    dunn_values = []
-    no_of_clusters = []
+    '''
+    In this method all the above functions are being used 
+    '''
+    def main(self):
+        dunn_values = []
+        no_of_clusters = []
 
-    # csv reading
-    df = pd.read_csv("Mall_Customers.csv")
+        # csv reading
+        df = pd.read_csv("Mall_Customers.csv")
 
-    # here for the columns i delected the unwanted ones you can change these as per your wish
-    col = []
-    for i in range(len(df.columns)):
-        col.append(str(df.columns[i]))
-    data = np.array(df[col])
-    for i in range(len(data[0])):
-        if type(data[0][i]) == str:
-            col.pop(i)
-    col.pop(0)
+        # here for the columns i delected the unwanted ones you can change these as per your wish
+        col = []
+        for i in range(len(df.columns)):
+            col.append(str(df.columns[i]))
+        data = np.array(df[col])
+        for i in range(len(data[0])):
+            if type(data[0][i]) == str:
+                col.pop(i)
+        col.pop(0)
 
-    # converting the data into an numpy array
-    data = np.array(df[col])
-    # number of rows in the csv file
-    rows = [i for i in range(len(data))]
-    
-    # object created for the class "KMeans"
-    ob1 = kMeans()
-
-    # this for loop spans k values from 2 to 10 
-    for k in range(2,11):
-        rand_array = ob1.randomIntegers(k,rows)
+        # converting the data into an numpy array
+        data = np.array(df[col])
+        # number of rows in the csv file
+        rows = [i for i in range(len(data))]
         
-        initial_centers = []
-        for i in range(k):
-            temp1 = data[rand_array[i]]
-            temp1 = temp1 - 0.8
-            initial_centers.append(temp1)
-        labels = ob1.meanCalculation(initial_centers,k,data)
-        J_old = ob1.costFunction(initial_centers,data)
-        updated_centers = ob1.centerCalculation(initial_centers,data)
-        J_new = ob1.costFunction(updated_centers,data)
         
-        epochs = 0
-        
-        # you can execute this program for wither of the conditions below
 
-        # while abs(J_new - J_old) >= 0.01:
-        while epochs < 300:
-            labels = ob1.meanCalculation(updated_centers,k,data)
-            updated_centers = ob1.centerCalculation(updated_centers,data)
-            J_old = J_new
+        # this for loop spans k values from 2 to 10 
+        for k in range(2,11):
+            rand_array = ob1.randomIntegers(k,rows)
+            
+            initial_centers = []
+            for i in range(k):
+                temp1 = data[rand_array[i]]
+                temp1 = temp1 - 0.8
+                initial_centers.append(temp1)
+            labels = ob1.meanCalculation(initial_centers,k,data)
+            J_old = ob1.costFunction(initial_centers,data)
+            updated_centers = ob1.centerCalculation(initial_centers,data)
             J_new = ob1.costFunction(updated_centers,data)
-            epochs+=1
-        up = ob1.clusterDistance(k,data)
-        down = ob1.clusterDiameter(k,data)
-        dunn_values.append(up/down)
-        no_of_clusters.append(k)
-        
-        ob1.graphPlotting(updated_centers,data,k)
-        
-    # this is thhe elbow plot to decide the best k value
-    plt.plot(no_of_clusters,dunn_values)
-    plt.title("Elbow Graph ")
-    plt.xlabel("Number of Clusters k")
-    plt.ylabel("Dunn Index") 
-    plt.savefig("Dunn Index.png")
-    plt.clf()
-    print("successful")
+            
+            epochs = 0
+            
+            # you can execute this program for wither of the conditions below
+
+            # while abs(J_new - J_old) >= 0.01:
+            while epochs < 300:
+                labels = ob1.meanCalculation(updated_centers,k,data)
+                updated_centers = ob1.centerCalculation(updated_centers,data)
+                J_old = J_new
+                J_new = ob1.costFunction(updated_centers,data)
+                epochs+=1
+            up = ob1.clusterDistance(k,data)
+            down = ob1.clusterDiameter(k,data)
+            dunn_values.append(up/down)
+            no_of_clusters.append(k)
+            
+            ob1.graphPlotting(updated_centers,data,k)
+            
+        # this is thhe elbow plot to decide the best k value
+        plt.plot(no_of_clusters,dunn_values)
+        plt.title("Elbow Graph ")
+        plt.xlabel("Number of Clusters k")
+        plt.ylabel("Dunn Index") 
+        plt.savefig("Dunn Index.png")
+        plt.clf()
+        print("successful")
+
+if __name__ == "__main__":  
+# object created for the class "KMeans"
+    ob1 = kMeans()
+    ob1.main()
